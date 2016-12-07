@@ -1,0 +1,23 @@
+Package: pax
+Title: tidy fish data wrangling functions
+Version: 0.0.1.9000
+Authors@R: person("Einar", "Hjorleifsson", email = "einar.hjorleifsson@gmail.com", role = c("aut", "cre"))
+Description: Survey and catch functions.
+Depends:
+    R (>= 3.2.3)
+Imports:
+    dplyr (>= 0.4.3),
+    gisland,
+    lubridate,
+    magrittr,
+    purrr,
+    stringr,
+    xml2
+License: GPL-3
+LazyData: true
+RoxygenNote: 5.0.1
+Suggests:
+    fjolst,
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
