@@ -80,7 +80,8 @@ calc_by_station <- function(st,
 #' \item Calculates stratified indices.
 #' \item Aggregates the stratified indices to the total area.
 #' }
-#'
+#' 
+#' @export
 #'
 #' @return Returns a \emph{list} with the following \emph{data.frame}s:
 #' \itemize{
@@ -152,13 +153,13 @@ calc_indices <- function(st,
     dplyr::group_by(year, strata, length) %>%
     dplyr::summarise(N  = n(),
                      n_m  = mean(n),
-                     n_d  = ifelse(N == 1, n_m  * std.cv, sd(n)),
+                     n_d  = ifelse(N == 1, n_m  * std.cv, stats::sd(n)),
                      cn_m = mean(cn),
-                     cn_d = ifelse(N == 1, cn_m * std.cv, sd(cn)),
+                     cn_d = ifelse(N == 1, cn_m * std.cv, stats::sd(cn)),
                      b_m  = mean(b),
-                     b_d  = ifelse(N == 1, b_m  * std.cv, sd(b)),
+                     b_d  = ifelse(N == 1, b_m  * std.cv, stats::sd(b)),
                      cb_m = mean(cb),
-                     cb_d = ifelse(N == 1, cb_m * std.cv, sd(cb))) %>%
+                     cb_d = ifelse(N == 1, cb_m * std.cv, stats::sd(cb))) %>%
     dplyr::ungroup() %>%
     dplyr::left_join(stratas %>% dplyr::select(strata, area = area), by = "strata") %>%
     dplyr::mutate(area  = area/1.852^2 / std.area,

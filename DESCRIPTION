@@ -6,13 +6,9 @@ Description: Survey and catch functions.
 Depends:
     R (>= 3.2.3)
 Imports:
-    dplyr (>= 0.4.3),
-    gisland,
-    lubridate,
-    magrittr,
-    purrr,
-    stringr,
-    xml2
+    dplyr (>= 0.5.0),
+    magrittr (>= 1.5),
+    stats
 License: GPL-3
 LazyData: true
 RoxygenNote: 5.0.1
