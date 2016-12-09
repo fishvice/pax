@@ -29,7 +29,7 @@ calc_by_station <- function(st,
                             std.towlength = 4,
                             std.towwidth = 17) {
   
-  ## dummy, for passing test without lot of notes
+  ## dummy, for passing test without lot of noise
   id <- n <- towlength <- b <- NULL
   
   # ----------------------------------------------------------------------------
@@ -195,6 +195,9 @@ calc_indices <- function(st,
 #'
 #' @description Calculates abundance and biomass survey indices based on length
 #' classes for a particular species in a given year.
+#' 
+#' The minimum arguments needed are a Station table, a Strata table, Species code and
+#' length-weight coefficient, with the rest of the data read in from fjolst.
 #'
 #' The function does in principle three things
 #' \itemize{
@@ -238,12 +241,20 @@ calc_indices <- function(st,
 #' @param SPECIES Species code
 #' @param lwcoeff A vector of length 2, containing parameter
 #' a and b of the length weight relationship.
-#' @param Length A dataframe with length frequency measurements. Required columns are
-#' id (station id), length (the length class) and n (the number of fish measured) where
-#' the latter are the "raised" numbers.
-#' @param Subsampling XXX
-#' @param std.towlength Standard tow length in nautical miles.
-#' @param std.towwidth Standardized tow width in meters
+#' @param Sex Specify sex (1 or 2) to limit calulation. Useful e.g. if one is interested
+#' in calculatin indices for "Raudmagi" or "Grasleppa". If missing (default) one
+#' gets the ususal non-sexed indices.
+#' @param Length A dataframe with length frequency measurements. If missing (default)
+#' the data are read in using fjolst::lesa.lengdir based on the id (synis.id) in
+#' Station table. This is the recomended method, but if a length dataframe is passed to the
+#' function the required columns are id (station id), length (the length class) and n 
+#' (the number of fish measured), the latter not being raised.
+#' @param Subsampling A dataframe containing a raising factor (r) for each sample
+#' id (synis.id) for the SPECIES. If missing (default) the data are read using the
+#' fjolst::lesa.numer based on the id (synis.id) in the Station table. This is the
+#' recomended method.
+#' @param std.towlength Standard tow length in nautical miles (default 4)
+#' @param std.towwidth Standardized tow width in meters (defalt 17)
 #' @param std.cv A multipler (default is 1) on the mean abundance/biomass if only one tow in
 #' a strata. In such cases the cv is set equivalent to the "mean" value.
 
@@ -251,6 +262,7 @@ calc_length_indices <- function(Station,
                          Stratas,
                          SPECIES,
                          lwcoeff,
+                         Sex,
                          Length,
                          Subsampling,
                          std.towlength = 4,
@@ -261,7 +273,7 @@ calc_length_indices <- function(Station,
   id <- n <- towlength <- b <- year <- strata <- N <- n_m <- cn <-
     cn_m <- b_m <- cb <- cb_m <- area <- n_d <- b_d <- cn_d <- cb_d <- 
     synis.id <- fj.talid <- fj.maelt <- mult <- n.counted <- n.measured <-
-    n.total <- lengd <- fjoldi <- kyn <- r <-  species <-  NULL
+    n.total <- lengd <- fjoldi <- kyn <- r <-  species <- sex <-  NULL
   
   if(missing(Subsampling)) {
     Subsampling <-
@@ -283,8 +295,20 @@ calc_length_indices <- function(Station,
       fjolst::lesa.lengdir(Station$id, SPECIES, col.names="kyn", oracle = FALSE) %>% 
       dplyr::mutate(species = SPECIES) %>% 
       dplyr::select(id = synis.id, species, length = lengd,
-             n = fjoldi, sex = kyn) %>% 
+             n = fjoldi, sex = kyn)
+      # Here one could do a filter on the sex, e.g. if one were interested in
+      # calculating index for rauðmagi or grásleppa.
+      # I.e.:
+      #   full stop above, then
+      if(!missing(Sex)) {
+          Length <- 
+            Length %>% 
+            dplyr::filter(sex %in% Sex)
+       }
+      # and then proceed below
       # a double precaution, in case length bins by sex
+    Length <-
+      Length %>% 
       dplyr::group_by(id, length) %>%
       dplyr::summarize(n = sum(n)) %>% 
       dplyr::ungroup() %>% 

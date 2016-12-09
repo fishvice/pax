@@ -4,8 +4,8 @@
 \alias{calc_length_indices}
 \title{Calculate length based survey indices}
 \usage{
-calc_length_indices(Station, Stratas, SPECIES, lwcoeff, Length, Subsampling,
-  std.towlength = 4, std.towwidth = 17, std.cv = 1)
+calc_length_indices(Station, Stratas, SPECIES, lwcoeff, Sex, Length,
+  Subsampling, std.towlength = 4, std.towwidth = 17, std.cv = 1)
 }
 \arguments{
 \item{Station}{A dataframe with station information. Required columns are
@@ -19,15 +19,24 @@ and area (the strata area).}
 \item{lwcoeff}{A vector of length 2, containing parameter
 a and b of the length weight relationship.}
 
-\item{Length}{A dataframe with length frequency measurements. Required columns are
-id (station id), length (the length class) and n (the number of fish measured) where
-the latter are the "raised" numbers.}
+\item{Sex}{Specify sex (1 or 2) to limit calulation. Useful e.g. if one is interested
+in calculatin indices for "Raudmagi" or "Grasleppa". If missing (default) one
+gets the ususal non-sexed indices.}
 
-\item{Subsampling}{XXX}
+\item{Length}{A dataframe with length frequency measurements. If missing (default)
+the data are read in using fjolst::lesa.lengdir based on the id (synis.id) in
+Station table. This is the recomended method, but if a length dataframe is passed to the
+function the required columns are id (station id), length (the length class) and n 
+(the number of fish measured), the latter not being raised.}
 
-\item{std.towlength}{Standard tow length in nautical miles.}
+\item{Subsampling}{A dataframe containing a raising factor (r) for each sample
+id (synis.id) for the SPECIES. If missing (default) the data are read using the
+fjolst::lesa.numer based on the id (synis.id) in the Station table. This is the
+recomended method.}
 
-\item{std.towwidth}{Standardized tow width in meters}
+\item{std.towlength}{Standard tow length in nautical miles (default 4)}
+
+\item{std.towwidth}{Standardized tow width in meters (defalt 17)}
 
 \item{std.cv}{A multipler (default is 1) on the mean abundance/biomass if only one tow in
 a strata. In such cases the cv is set equivalent to the "mean" value.}
@@ -62,6 +71,9 @@ to a given length class
 \description{
 Calculates abundance and biomass survey indices based on length
 classes for a particular species in a given year.
+
+The minimum arguments needed are a Station table, a Strata table, Species code and
+length-weight coefficient, with the rest of the data read in from fjolst.
 
 The function does in principle three things
 \itemize{
