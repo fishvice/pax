@@ -7,6 +7,7 @@ Depends:
     R (>= 3.2.3)
 Imports:
     dplyr (>= 0.5.0),
+    husky,
     magrittr (>= 1.5),
     stats
 License: GPL-3

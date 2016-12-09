@@ -28,12 +28,15 @@ calc_by_station <- function(st,
                             std = c("none", "towlength", "areaswept"),
                             std.towlength = 4,
                             std.towwidth = 17) {
-
+  
+  ## dummy, for passing test without lot of notes
+  id <- n <- towlength <- b <- NULL
+  
   # ----------------------------------------------------------------------------
   # Standardize to what:
-
+  
   converter <- 1852   # meters per nautical mile
-
+  
   if(std == "none") {
     st <- st %>% dplyr::mutate(towlength = 1)  # makes nonsense but works further down
     std.towlength <- 1
@@ -44,13 +47,13 @@ calc_by_station <- function(st,
     std.towwidth <- 1
     converter <- 1
   }
-
+  
   # if std == "none"      multiplier will be 1
   # if std == "towlength" multiplier will be std.towlength (e.g. per 4 nautical miles)
   # if std == "areaswept" multiplier will be as below with converter being 1852 meters
   #                         per square nautical miles
   multiplier <- std.towlength * std.towwidth/converter
-
+  
   d <-
     #     NOTE: question were to specify length bins, here hardwired 5:140
     dplyr::as_data_frame(expand.grid(length = c(5:140), id = st$id)) %>%
@@ -63,9 +66,9 @@ calc_by_station <- function(st,
                   b  = n * lwcoeff[1] * length^lwcoeff[2]/1e3,
                   cb = sum(b) - cumsum(b) + b) %>%
     dplyr::ungroup()
-
+  
   return(d)
-
+  
 }
 
 
@@ -124,17 +127,19 @@ calc_by_station <- function(st,
 #' a strata. In such cases the cv is set equivalent to the "mean" value.
 
 calc_indices <- function(st,
-                         le,
-                         lwcoeff = c(0.01, 3),
-                         stratas,
-                         std.towlength = 4,
-                         std.area = 4 * 17/1852,
-                         std.cv = 1) {
-
-  # dummy, for passing test without lot of notes
+                             le,
+                             lwcoeff = c(0.01, 3),
+                             stratas,
+                             std.towlength = 4,
+                             std.area = 4 * 17/1852,
+                             std.cv = 1) {
+  
+  ## dummy, for passing test without lot of notes
   id <- n <- towlength <- b <- year <- strata <- N <- n_m <- cn <-
-    cn_m <- b_m <- cb <- cb_m <- area <- n_d <- b_d <- cn_d <- cb_d <- NULL
-
+    cn_m <- b_m <- cb <- cb_m <- area <- n_d <- b_d <- cn_d <- cb_d <- 
+    synis.id <- fj.talid <- fj.maelt <- mult <- n.counted <- n.measured <-
+    n.total <- lengd <- fjoldi <- kyn <- NULL
+  
   # Because we are calculating the abundance less than and biomass greater than
   #  we first generate a data.frame based on all combination of synis.id and length
   #  classes
@@ -167,7 +172,7 @@ calc_indices <- function(st,
                   cn    = cn_m * area,
                   b     = b_m  * area,
                   cb    = cb_m * area)
-
+  
   aggr <-
     base %>%
     dplyr::group_by(year, length) %>%
@@ -180,10 +185,120 @@ calc_indices <- function(st,
                      cn.cv = calc_cv(cn_m, cn_d, area, N),
                      cb = sum(cb),
                      cb.cv = calc_cv(cb_m, cb_d, area, N))
-
+  
   return(list(base = base, aggr = aggr))
-
+  
 }
+
+
+#' @title Calculate length based survey indices
+#'
+#' @description Calculates abundance and biomass survey indices based on length
+#' classes for a particular species in a given year.
+#'
+#' The function does in principle three things
+#' \itemize{
+#' \item Standardizes value (e.g. number of fish) by tow length.
+#' \item Calculates stratified indices.
+#' \item Aggregates the stratified indices to the total area.
+#' }
+#'
+#' @return Returns a \emph{list} with the following \emph{data.frame}s:
+#' \itemize{
+#' \item \code{base} that contains the statistics by each strata
+#' \itemize{
+#' \item \code{year}: Names/number of the strata
+#' \item ... TODO
+#' }
+#' \item \code{aggr} The total survey index. The columns are:
+#' \itemize{
+#' \item \code{year}: Survey year
+#' \item \code{length}: The length class
+#' \item \code{n}: Abundance index for the given length class
+#' \item \code{n.cv}: cv of the abundance index for a given length class
+#' \item \code{b}: Biomass index for the given length class
+#' \item \code{b.cv}: cv of the biomass index for a given length class
+#' \item \code{cn}: Abundance index of fish smaller than or equal to a given
+#' length class.
+#' \item \code{cn.cv}: cv of the abundance index of fish smaller than or equal
+#' to a given length class
+#' \item \code{cb}: Biomass index of fish greater than or equal to a given
+#' length class.
+#' \item \code{cb.cv}: cv of the biomass index of fish greater than or equal
+#' to a given length class
+#' }
+#' }
+#' 
+#' @export
+#' 
+#' @param Station A dataframe with station information. Required columns are
+#' id (unique station id), year, towlength and strata (the strata identifyer).
+#' @param Stratas A dataframe containing columns strata (the strata identifyer)
+#' and area (the strata area).
+#' @param SPECIES Species code
+#' @param lwcoeff A vector of length 2, containing parameter
+#' a and b of the length weight relationship.
+#' @param Length A dataframe with length frequency measurements. Required columns are
+#' id (station id), length (the length class) and n (the number of fish measured) where
+#' the latter are the "raised" numbers.
+#' @param Subsampling XXX
+#' @param std.towlength Standard tow length in nautical miles.
+#' @param std.towwidth Standardized tow width in meters
+#' @param std.cv A multipler (default is 1) on the mean abundance/biomass if only one tow in
+#' a strata. In such cases the cv is set equivalent to the "mean" value.
+
+calc_length_indices <- function(Station,
+                         Stratas,
+                         SPECIES,
+                         lwcoeff,
+                         Length,
+                         Subsampling,
+                         std.towlength = 4,
+                         std.towwidth = 17,
+                         std.cv = 1) {
+  
+  ## dummy, for passing test without lot of noise
+  id <- n <- towlength <- b <- year <- strata <- N <- n_m <- cn <-
+    cn_m <- b_m <- cb <- cb_m <- area <- n_d <- b_d <- cn_d <- cb_d <- 
+    synis.id <- fj.talid <- fj.maelt <- mult <- n.counted <- n.measured <-
+    n.total <- lengd <- fjoldi <- kyn <- r <-  species <-  NULL
+  
+  if(missing(Subsampling)) {
+    Subsampling <-
+      fjolst::lesa.numer(Station$id, SPECIES, oracle = FALSE) %>% 
+      dplyr::mutate(species = SPECIES) %>% 
+      dplyr::select(id = synis.id, species,
+             n.counted = fj.talid,
+             n.measured = fj.maelt) %>% 
+      # Scaling the two trawls - specific for the fall survey
+      dplyr::left_join(Station %>% dplyr::select(id, mult), by = "id") %>% 
+      dplyr::mutate(n.total = (n.counted + n.measured) / mult,
+             # Calculate the raising factor
+             r = n.total/n.measured) %>% 
+      dplyr::select(id, r)
+  }
+  
+  if(missing(Length)) {
+    Length <- 
+      fjolst::lesa.lengdir(Station$id, SPECIES, col.names="kyn", oracle = FALSE) %>% 
+      dplyr::mutate(species = SPECIES) %>% 
+      dplyr::select(id = synis.id, species, length = lengd,
+             n = fjoldi, sex = kyn) %>% 
+      # a double precaution, in case length bins by sex
+      dplyr::group_by(id, length) %>%
+      dplyr::summarize(n = sum(n)) %>% 
+      dplyr::ungroup() %>% 
+      dplyr::left_join(Subsampling, by="id") %>%
+      dplyr::mutate(n = n * r / 1e3) %>%     # units of thousands
+      dplyr::select(-r)
+  }
+
+  # calculate
+  calc_indices(st = Station, lwcoeff = husky::LWCOEFF[[as.character(SPECIES)]], le = Length, stratas = Stratas)
+}
+
+
+
 
 calc_cv <- function(x, xd, area, N) {
   Mean = sum(x * area)/sum(area)
@@ -192,7 +307,7 @@ calc_cv <- function(x, xd, area, N) {
   Calc.sdev = sqrt(sum(xd[!is.na(xd)]^2 * area[!is.na(xd)]^2/  N[!is.na(xd)])   / sum(area[!is.na(xd)])^2)
   Sdev = Calc.sdev * Sum/tmpsum
   cv = Sdev/Mean
-
+  
   return(cv)
 }
 
@@ -207,13 +322,13 @@ calc_cv <- function(x, xd, area, N) {
 #' @param max.towlength Maximum towlength. If missing (default) the value is set to
 #' double the std.towlength
 trim_towlength <- function(x, std.towlength = 4, min.towlength, max.towlength) {
-
+  
   if(missing(min.towlength)) min.towlength <- std.towlength / 2
   if(missing(max.towlength)) max.towlength <- std.towlength * 2
-
+  
   x <- ifelse(is.na(x),std.towlength, x)
   x <- ifelse(x > max.towlength, max.towlength, x)
   x <- ifelse(x < min.towlength, min.towlength, x)
-
+  
   return(x)
 }
