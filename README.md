@@ -34,7 +34,6 @@ library(pax)
 
 ```r
 SPECIES <- 1
-KYN <- NULL
 ```
 
 #### SMB all stations
@@ -140,4 +139,27 @@ tidy_fixed %>%
 ```
 
 So the tidyverse is 0.2% higher than the mri - some may want to dig into that.
+
+### Another example
+
+Here lets try to calculate the index for Grásleppa. We use the same station set and strata as above. Hence only need to do:
+
+```r
+res <- calc_length_indices(Station, Stratas, 48, Sex = 2)
+# and a quick plot
+res$aggr %>% 
+  filter(length == 5) %>% 
+  select(year, cb, cb.cv) %>% 
+  ggplot(aes(year, cb)) +
+  geom_pointrange(aes(ymin = cb * (1 - cb.cv),
+                      ymax = cb * (1 + cb.cv)),
+                  colour = "red", lwd = 1) +
+  geom_line(colour = "red", lwd = 1) +
+  scale_colour_brewer(palette = "Set1") +
+  labs(x = NULL, y = NULL,
+       title = "Grásleppa: Spring survey biomass index",
+       subtitle = "All stations")
+```
+
+![](README_files/figure-html/plot2-1.png)<!-- -->
 
