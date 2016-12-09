@@ -140,7 +140,7 @@ tidy_fixed %>%
 
 So the tidyverse is 0.2% higher than the mri - some may want to dig into that.
 
-### Another example
+### Another example, this time only for one sex
 
 Here lets try to calculate the index for Grásleppa. We use the same station set and strata as above. Hence only need to do:
 
@@ -163,3 +163,38 @@ res$aggr %>%
 
 ![](README_files/figure-html/plot2-1.png)<!-- -->
 
+### One more, this time for a "non-standard" species
+
+
+```r
+spe88 <- calc_length_indices(Station, Stratas, 88, lwcoeff = c(0.01, 3))
+spe562 <- calc_length_indices(Station, Stratas, 562, lwcoeff = c(0.01, 3))
+spe150 <- calc_length_indices(Station, Stratas, 150, lwcoeff = c(0.01, 3))
+spe71 <- calc_length_indices(Station, Stratas, 71, lwcoeff = c(0.01, 3))
+spe88$aggr %>% mutate(Species = "Rauða sævesla") %>% 
+  bind_rows(spe562$aggr %>% mutate(Species = "Ljóskjafta")) %>% 
+  bind_rows(spe150$aggr %>% mutate(Species = "Svartgóma")) %>% 
+  bind_rows(spe71$aggr %>% mutate(Species = "Ískóð")) %>% 
+  filter(length == 140) %>% 
+  select(year, Species, cn, cn.cv) %>% 
+  ggplot(aes(year, cn)) +
+  geom_pointrange(aes(ymin = cn * (1 - cn.cv),
+                      ymax = cn * (1 + cn.cv)),
+                  colour = "red", lwd = 1) +
+  geom_line(colour = "red", lwd = 1) +
+  scale_colour_brewer(palette = "Set1") +
+  facet_wrap(~ Species, scale = "free_y") +
+  labs(x = NULL, y = NULL,
+       title = "Spring survey abundance index",
+       subtitle = "All stations")
+```
+
+```
+## Warning: Removed 58 rows containing missing values (geom_pointrange).
+```
+
+![](README_files/figure-html/plot3-1.png)<!-- -->
+
+So we have and invasion of Ljóskjafta and Svartgóma in recent years. That must explain the mackerel invasion :-)
+
+NOTE: There is a bug when it comes to the biomass estimates of the two last species. And one needs to double test for when some species were only counted.

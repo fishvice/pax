@@ -286,7 +286,8 @@ calc_length_indices <- function(Station,
       dplyr::left_join(Station %>% dplyr::select(id, mult), by = "id") %>% 
       dplyr::mutate(n.total = (n.counted + n.measured) / mult,
              # Calculate the raising factor
-             r = n.total/n.measured) %>% 
+             r = n.total/n.measured,
+             r = ifelse(r == Inf, 1, r)) %>% 
       dplyr::select(id, r)
   }
   
