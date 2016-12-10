@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE,
                       message = FALSE)
 ```
 
-### Premable
+### Preamble
 
 ... pax: population analysis in unix. This is a resuscitation of an old name - but likely going to do more.
 
@@ -43,7 +43,7 @@ SPECIES <- 1
 
 #### SMB all stations
 
-OK, here you have to have some bacground knowledge. But we select "all" SMB stations:
+OK, here you have to have some background knowledge. But we select "all" SMB stations:
 
 ```{r}
 Station <- 
@@ -86,10 +86,7 @@ p <-
                       ymax = cb * (1 + cb.cv)),
                   colour = "red", lwd = 1) +
   geom_line(colour = "red", lwd = 1) +
-  scale_colour_brewer(palette = "Set1") +
-  labs(x = NULL, y = NULL,
-       title = "Haddock: Spring survey biomass index",
-       subtitle = "All stations")
+  scale_colour_brewer(palette = "Set1")
 ```
 
 Lets add the official calculations for comparison:
@@ -175,3 +172,37 @@ spe88$aggr %>% mutate(Species = "Rauða sævesla") %>%
 So we have and invasion of Ljóskjafta and Svartgóma in recent years. That must explain the mackerel invasion :-)
 
 NOTE: There is a bug when it comes to the biomass estimates of the two last species. And one needs to double test for when some species were only counted.
+
+### And at last be not the least - the fall survey
+
+```{r, plot4}
+Stations <- 
+  smh_strata_setup() %>% 
+  select(id = synis.id, year = ar, towlength = toglengd, strata = newstrata) %>% 
+  mutate(towlength = pax:::trim_towlength(towlength),
+         mult = 1) %>% 
+  arrange(id)
+Stratas <-
+  husky::newstratas_df %>% 
+  select(strata, area = rall.area)
+res <- calc_length_indices(Stations, Stratas, 1)
+res$aggr %>% 
+  filter(length == 5,
+         year < 2016) %>%  # sorry - not public yet 
+  select(year, cb, cb.cv) %>% 
+  ggplot(aes(year, cb)) +
+  geom_pointrange(aes(ymin = cb * (1 - cb.cv),
+                      ymax = cb * (1 + cb.cv)),
+                  colour = "red", lwd = 1) +
+  geom_line(colour = "red", lwd = 1) +
+  scale_colour_brewer(palette = "Set1") +
+  labs(x = NULL, y = NULL,
+       title = "Cod: Fall survey biomass index",
+       subtitle = "All stations")
+```
+
+## Some info
+```{r}
+devtools::session_info()
+```
+
