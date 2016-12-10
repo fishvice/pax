@@ -2,4 +2,5 @@
 
 export(calc_indices)
 export(calc_length_indices)
+export(smh_strata_setup)
 importFrom(magrittr,"%>%")
