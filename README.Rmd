@@ -169,7 +169,7 @@ spe88$aggr %>% mutate(Species = "Rauða sævesla") %>%
        subtitle = "All stations")
 ```
 
-So we have and invasion of Ljóskjafta and Svartgóma in recent years. That must explain the mackerel invasion :-)
+So we have an invasion of Ljóskjafta and Svartgóma in recent years. That must explain the mackerel invasion :-)
 
 NOTE: There is a bug when it comes to the biomass estimates of the two last species. And one needs to double test for when some species were only counted.
 
@@ -187,8 +187,7 @@ Stratas <-
   select(strata, area = rall.area)
 res <- calc_length_indices(Stations, Stratas, 1)
 res$aggr %>% 
-  filter(length == 5,
-         year < 2016) %>%  # sorry - not public yet 
+  filter(length == 5) %>% 
   select(year, cb, cb.cv) %>% 
   ggplot(aes(year, cb)) +
   geom_pointrange(aes(ymin = cb * (1 - cb.cv),
