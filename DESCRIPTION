@@ -10,7 +10,9 @@ Imports:
     geo,
     husky,
     magrittr (>= 1.5),
-    stats
+    purrr,
+    stats,
+    tidyr
 License: GPL-3
 LazyData: true
 RoxygenNote: 5.0.1
