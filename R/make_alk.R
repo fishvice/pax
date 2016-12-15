@@ -49,7 +49,7 @@ make_alk <- function(stodvar, SPECIES, lengthclass, vikmork, kvarnir) {
     dplyr::mutate(lclass = as.character(cut(lengd, breaks = lengthclass))) %>%
     dplyr::filter(!is.na(lclass)) %>%
     dplyr::group_by(ar, region, lclass, aldur) %>%
-    dplyr::summarise(n = dplyr::n()) %>%
+    dplyr::summarise(n = n()) %>%
     dplyr::group_by(ar, region, lclass) %>%
     dplyr::mutate(p = n/sum(n)) %>%
     dplyr::ungroup() %>%
