@@ -10,13 +10,15 @@ knitr::opts_chunk$set(echo = TRUE,
                       message = FALSE)
 ```
 
-### Preamble
+## Preamble
+___
 
 ... pax: population analysis in unix. This is a resuscitation of an old name - but likely going to do more.
 
 Have you wished for a painless way to generate survey indices. Give the following a try.
 
-### Needed packages
+## Needed packages
+___
 
 ```{r, eval = FALSE}
 devtools::install_github("fishvice/husky", dependencies = FALSE) # A temporary measure
@@ -25,23 +27,19 @@ devtools::install_github("fishvice/pax", dependencies = FALSE)
 
 In addition it is assumed you have the __fjolst__-package.
 
-### Loading needed libraries
+## Loading needed libraries
+___
 
 ```{r}
 library(tidyverse)
-library(fjolst)
+library(fjolst)    # for the time being
 library(pax)
 ```
 
-### An example
+## Length based indices
+___
 
-#### Specify the species
-
-```{r}
-SPECIES <- 1
-```
-
-#### SMB all stations
+### Specify the stations and strata
 
 OK, here you have to have some background knowledge. But we select "all" SMB stations:
 
@@ -64,13 +62,18 @@ Stratas <-
   select(strata, area = rall.area)
 ```
 
-And then we leave the rest to the `smx:calc_length_indices`-function:
 
 ```{r}
-res <- calc_length_indices(Station, Stratas, SPECIES)
+
 ```
 
-#### Visualization
+And then we leave the rest to the `smx:calc_length_indices`-function:
+
+#### Cod spring survey index
+
+```{r}
+res <- calc_length_indices(Station, Stratas, SPECIES = 1)
+```
 
 Extracting the tidy information and preparing the plot:
 ```{r}
@@ -94,7 +97,7 @@ Lets add the official calculations for comparison:
 attach("/net/hafkaldi/export/u2/reikn/Splus5/SMB/Allindices.RData")
 mri <- 
   All.indices %>% 
-  filter(species == SPECIES,
+  filter(species == 1,
          svaedi == "Heild",
          lengd == 5,
          type == "all") %>% 
@@ -112,8 +115,7 @@ p +
        subtitle = "Comparison of the tidyverse (red) and the Bible (grey)")
 ```
 
-#### Something to worry about?
-
+__Something to worry about__:?
 ```{r}
 tidy_fixed %>% 
   select(year, cb) %>% 
@@ -124,11 +126,11 @@ tidy_fixed %>%
 
 So the tidyverse is 0.2% higher than the mri - some may want to dig into that.
 
-### Another example, this time only for one sex
+#### Grásleppa spring survey index
 
-Here lets try to calculate the index for Grásleppa. We use the same station set and strata as above. Hence only need to do:
+Here lets try to calculate the index for Grásleppa. We use the same station set and strata as above. Hence only need to do specify in addition the sex:
 ```{r, plot2}
-res <- calc_length_indices(Station, Stratas, 48, Sex = 2)
+res <- calc_length_indices(Station, Stratas, SPECIES = 48, Sex = 2)
 # and a quick plot
 res$aggr %>% 
   filter(length == 5) %>% 
@@ -144,7 +146,7 @@ res$aggr %>%
        subtitle = "All stations")
 ```
 
-### One more, this time for a "non-standard" species
+#### "non-standard" species spring survey index
 
 ```{r, plot3}
 spe88 <- calc_length_indices(Station, Stratas, 88, lwcoeff = c(0.01, 3))
@@ -173,7 +175,7 @@ So we have an invasion of Ljóskjafta and Svartgóma in recent years. That must 
 
 NOTE: There is a bug when it comes to the biomass estimates of the two last species. And one needs to double test for when some species were only counted.
 
-### And at last be not the least - the fall survey
+#### And at last be not the least - the fall survey
 
 ```{r, plot4}
 Stations <- 
@@ -185,7 +187,7 @@ Stations <-
 Stratas <-
   husky::newstratas_df %>% 
   select(strata, area = rall.area)
-res <- calc_length_indices(Stations, Stratas, 1)
+res <- calc_length_indices(Stations, Stratas, SPECIES = 1)
 res$aggr %>% 
   filter(length == 5) %>% 
   select(year, cb, cb.cv) %>% 
@@ -199,6 +201,47 @@ res$aggr %>%
        title = "Cod: Fall survey biomass index",
        subtitle = "All stations")
 ```
+
+## Age based indices
+___
+
+Still under development (needs further testing), but here is one trial.
+
+```{r}
+# Lest start from scratch
+stratas <-
+  husky::stratas_df %>% 
+  select(strata, area = rall.area)
+SPECIES <- 1
+lengthclass <- c(seq(4.5, 109.5, by = 5), 119.5, 139.5)
+ind <- c(31931, 31932, 32131, 36731, 37031, 37131, 37132, 37231, 41431, 41531, 42231, 42232, 47431, 52331)
+st1 <-
+  bind_rows(husky::STODVAR) %>%
+  filter(tognumer < 20 | index %in% ind) %>%
+  mutate(region = ifelse(area %in% c(1, 9, 10), "south",
+                         ifelse(area %in% c(2:8), "north", NA))) %>%
+  filter(!is.na(region)) %>%
+  select(synis.id, ar, towlength = toglengd, region, strata = newstrata)
+
+st2 <-
+  bind_rows(husky::STODVAR) %>% 
+  filter(area %in% 1:10) %>% 
+  bind_rows(lesa.stodvar(leidangur="A4-2001")) %>% 
+  mutate(region = ifelse(area %in% c(1, 9, 10), "south",
+                         ifelse(area %in% c(2:8), "north", NA))) %>%
+  filter(!is.na(region)) %>%
+  select(synis.id, ar, towlength = toglengd, region, strata = newstrata)
+
+x <- calc_age_indices(st_length = st1, st_ototliths = st2, species = 1)
+x$aggr %>% 
+  mutate(n = round(n/1e6, 2)) %>% 
+  select(-n.cv) %>% 
+  filter(aldur %in% 1:11) %>% # just to fit things on the screen
+  spread(aldur, n) %>% 
+  as.data.frame()
+```
+
+Above it not a perfect match with the husky-approach, but who says the latter is correct :-)
 
 ## Some info
 ```{r}
