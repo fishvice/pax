@@ -4,14 +4,14 @@
 \alias{catch_by_station}
 \title{Catch per station for each length class}
 \usage{
-catch_by_station(Station, le, lwcoeff = c(0.01, 3), std = c("none",
+catch_by_station(Station, Length, lwcoeff = c(0.01, 3), std = c("none",
   "towlength", "areaswept"), std.towlength = 4, std.towwidth = 17)
 }
 \arguments{
 \item{Station}{A dataframe with station information. Required columns are
 id (unique station id), year, towlength and strata (the strata identifyer).}
 
-\item{le}{A dataframe with length frequency measurements. Required columns are
+\item{Length}{A dataframe with length frequency measurements. Required columns are
 id (station id), length (the length class) and n (the number of fish measured) where
 the latter are the "raised" numbers.}
 
