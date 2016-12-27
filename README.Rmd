@@ -149,14 +149,15 @@ res$aggr %>%
 #### "non-standard" species spring survey index
 
 ```{r, plot3}
-spe88 <- calc_length_indices(Station, Stratas, 88, lwcoeff = c(0.01, 3))
+spe88 <-  calc_length_indices(Station, Stratas,  88, lwcoeff = c(0.01, 3))
 spe562 <- calc_length_indices(Station, Stratas, 562, lwcoeff = c(0.01, 3))
 spe150 <- calc_length_indices(Station, Stratas, 150, lwcoeff = c(0.01, 3))
-spe71 <- calc_length_indices(Station, Stratas, 71, lwcoeff = c(0.01, 3))
-spe88$aggr %>% mutate(Species = "Rauða sævesla") %>% 
+spe71 <-  calc_length_indices(Station, Stratas,  71, lwcoeff = c(0.01, 3))
+spe88$aggr %>% 
+  mutate(Species = "Rauða sævesla") %>% 
   bind_rows(spe562$aggr %>% mutate(Species = "Ljóskjafta")) %>% 
   bind_rows(spe150$aggr %>% mutate(Species = "Svartgóma")) %>% 
-  bind_rows(spe71$aggr %>% mutate(Species = "Ískóð")) %>% 
+  bind_rows(spe71$aggr %>%  mutate(Species = "Ískóð")) %>% 
   filter(length == 140) %>% 
   select(year, Species, cn, cn.cv) %>% 
   ggplot(aes(year, cn)) +
