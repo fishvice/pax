@@ -3,6 +3,7 @@
 export(calc_age_indices)
 export(calc_indices)
 export(calc_length_indices)
+export(catch_by_station)
 export(make_alk)
 export(make_ldist_by_station)
 export(smh_strata_setup)
