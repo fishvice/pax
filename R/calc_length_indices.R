@@ -104,19 +104,17 @@ calc_length_indices <- function(Station,
       dplyr::mutate(species = SPECIES) %>% 
       dplyr::select(id = synis.id, species, length = lengd,
                     n = fjoldi, sex = kyn)
-    # Here one could do a filter on the sex, e.g. if one were interested in
+    # Filter by sex, e.g. if one were interested in
     # calculating index for rauðmagi or grásleppa.
-    # I.e.:
-    #   full stop above, then
     if(!missing(Sex)) {
       Length <- 
         Length %>% 
         dplyr::filter(sex %in% Sex)
     }
-    # and then proceed below
-    # a double precaution, in case length bins by sex
+   
     Length <-
       Length %>% 
+      # a double precaution
       dplyr::group_by(id, length) %>%
       dplyr::summarize(n = sum(n)) %>% 
       dplyr::ungroup() %>% 

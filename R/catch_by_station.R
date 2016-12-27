@@ -1,4 +1,4 @@
-# Think of this as the elementary function
+# The function make_ldist_by_station does very similar things
 
 #' @title Catch per station for each length class
 #'
@@ -61,7 +61,13 @@ catch_by_station <- function(Station,
   d <-
     #     NOTE: question were to specify length bins, here hardwired 5:140
     dplyr::as_data_frame(expand.grid(length = c(5:140), id = Station$id)) %>%
-    dplyr::left_join(Station, by = "id") %>%
+    dplyr::left_join(Station, by = "id")
+  
+  # Here should allow for length data.frame being missing
+  #  But then also need numer because default is that stuff is raised
+  #  Should may be have that as an option
+  d <-
+    d %>%
     dplyr::left_join(le, by=c("id","length")) %>%
     dplyr::arrange(id, length) %>%
     dplyr::group_by(id) %>%
