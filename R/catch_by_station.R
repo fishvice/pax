@@ -12,7 +12,7 @@
 #'
 #' @param Station A dataframe with station information. Required columns are
 #' id (unique station id), year, towlength and strata (the strata identifyer).
-#' @param le A dataframe with length frequency measurements. Required columns are
+#' @param Length A dataframe with length frequency measurements. Required columns are
 #' id (station id), length (the length class) and n (the number of fish measured) where
 #' the latter are the "raised" numbers.
 #' @param lwcoeff A vector of length 2, containing parameter
@@ -27,7 +27,7 @@
 #' @return A dataframe containing the follow columns ..
 
 catch_by_station <- function(Station,
-                             le,
+                             Length,
                              lwcoeff = c(0.01, 3),
                              std = c("none", "towlength", "areaswept"),
                              std.towlength = 4,
@@ -66,9 +66,13 @@ catch_by_station <- function(Station,
   # Here should allow for length data.frame being missing
   #  But then also need numer because default is that stuff is raised
   #  Should may be have that as an option
+  if(missing(Length)) {
+    
+  }
+  
   d <-
     d %>%
-    dplyr::left_join(le, by=c("id","length")) %>%
+    dplyr::left_join(Length, by=c("id","length")) %>%
     dplyr::arrange(id, length) %>%
     dplyr::group_by(id) %>%
     dplyr::mutate(n  = ifelse(is.na(n),0,n)  / towlength * multiplier,
