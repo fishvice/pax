@@ -1,0 +1,149 @@
+---
+title: "Using pax"
+author: "Einar Hjörleifsson"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
+
+# To do
+
+* Get rid of repetition
+
+```{r}
+library(dplyrOracle)
+library(mar)
+db <- src_oracle("mar")
+Station <- 
+  husky::STODVAR %>% 
+  bind_rows() %>% 
+  filter(tognumer %in% 1:39) %>% 
+  select(id = synis.id,
+         year = ar,
+         towlength = toglengd,
+         strata = newstrata,
+         reitur,
+         tognumer,
+         lon,
+         lat) %>% 
+  mutate(towlength = pax:::trim_towlength(towlength),
+         mult = 1) %>% 
+  arrange(id) %>% 
+  mutate(sid = paste(reitur, tognumer)) %>% 
+  select(-c(reitur, tognumer))
+
+# Use same strata for 2017 stations as last year
+x <- 
+  Station %>% 
+  filter(year == 2016) %>% 
+  select(sid, strata)
+
+st <-
+  lesa_stodvar(db) %>% 
+  mutate(lon = ifelse(!is.na(hift_v_lengd), (kastad_v_lengd + hift_v_lengd)/2, kastad_v_lengd),
+         lat = ifelse(!is.na(hift_n_breidd), (kastad_n_breidd + hift_n_breidd)/2, kastad_n_breidd)) %>% 
+  filter(veidarfaeri %in % 73,
+         ar == 2017,
+         tognumer %in% 1:39) %>% 
+  select(id = synis_id,
+         year = ar,
+         towlength = toglengd,
+         reitur,
+         tognumer,
+         lon,
+         lat) %>% 
+  collect(n = Inf) %>% 
+  mutate(towlength = pax:::trim_towlength(towlength),
+         mult = 1,
+         sid = paste(reitur, tognumer)) %>% 
+  select(-c(reitur, tognumer)) %>% 
+  left_join(x) %>% 
+  filter(!is.na(strata))
+
+table(!is.na(st$strata))
+
+st %>% 
+  ggplot(aes(lon, lat)) +
+  geom_point() +
+  coord_quickmap()
+
+Station <-
+  Station %>% 
+  filter(sid %in% st$sid) %>% 
+  bind_rows(st) %>% 
+  select(id, year, towlength, strata, lon, lat) %>% 
+  mutate(mult = 1)
+
+Stratas <-
+  husky::stratas_df %>% 
+  select(strata, area = rall.area)
+
+res <- calc_length_indices(Station, Stratas, SPECIES = 1, oracle = TRUE)
+
+tidy_fixed <-
+  res$aggr %>% 
+  filter(length == 5) %>% 
+  mutate(source = "tidy")
+tidy_fixed %>% 
+  select(year, cb, cb.cv) %>% 
+  ggplot(aes(year, cb)) +
+  geom_pointrange(aes(ymin = cb * (1 - cb.cv),
+                      ymax = cb * (1 + cb.cv)),
+                  colour = "red", lwd = 1) +
+  geom_line(colour = "red", lwd = 1) +
+  scale_colour_brewer(palette = "Set1")
+
+res$aggr %>% 
+  filter(year %in% c(2005:2017)) %>% 
+  ggplot(aes(length, n)) +
+  geom_line() +
+  facet_wrap(~ year)
+
+x <-
+  res$aggr %>% 
+  filter(year %in% c(2014:2017)) %>% 
+  group_by(length) %>% 
+  mutate(n.mean = mean(n),
+         b.mean = mean(b))
+x %>% 
+  ggplot(aes(length)) +
+  theme_bw() +
+  geom_polygon(aes(y = n.mean), fill = "grey") +
+  geom_ribbon(aes(ymin = n * (1 - n.cv),
+                  ymax = n * (1 + n.cv)), 
+              fill = "pink",
+              alpha = 0.6) +
+  geom_line(aes(y = n), colour = "red") +
+  facet_grid(year ~ .) +
+  labs(x = NULL, y = NULL,
+       title = "Abundance indices",
+       subtitle = "All years: only tows that have so far been taken in 2017") 
+
+x %>% 
+  ggplot(aes(length)) +
+  theme_bw() +
+  geom_polygon(aes(y = b.mean), fill = "grey") +
+  geom_ribbon(aes(ymin = b * (1 - b.cv),
+                  ymax = b * (1 + b.cv)), 
+              fill = "pink",
+              alpha = 0.6) +
+  geom_line(aes(y = b), colour = "red") +
+  facet_grid(year ~ .) 
+
+cpue <- 
+  catch_by_station(1, Station, std = "towlength", oracle = TRUE) 
+cpue %>% 
+  filter(length == 5,
+         year %in% 2014:2017) %>% 
+  ggplot(aes(lon, lat, size = cb)) +
+  theme_bw() +
+  geom_point(col = "red", alpha = 0.4) +
+  facet_wrap(~ year) +
+  scale_size_area(max_size = 15)
+
+  
+```
+
