@@ -5,13 +5,23 @@
 #' @param lengthclass XXX
 #' @param lengdir XXX
 #' @param numer XXX
+#' @param std.towlength XXX
+#' @param std.towwidth XXX
+#' @param std.cv XXX
 #'
 #' @export
 #'
-make_ldist_by_station <- function(stodvar, SPECIES, lengthclass, lengdir, numer,
+make_ldist_by_station <- function(stodvar,
+                                  SPECIES,
+                                  lengthclass,
+                                  lengdir,
+                                  numer,
                                   std.towlength = 4,
-                                  std.cv = 1,
-                                  std.area = 4 * 17/1852) {
+                                  std.towwidth = 17,
+                                  std.cv = 1) {
+  
+  # Note: Not used, yet
+  std.area <- std.towlength * std.towwidth/1852
   
   if(missing(lengdir)) {
     lengdir <-

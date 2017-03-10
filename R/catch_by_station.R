@@ -10,9 +10,9 @@
 #' 
 #' @export
 #'
-#' @param Station A dataframe with station information. Required columns are
+#' @param Stations A dataframe with station information. Required columns are
 #' id (unique station id), year, towlength and strata (the strata identifyer).
-#' @param Length A dataframe with length frequency measurements. Required columns are
+#' @param Lengths A dataframe with length frequency measurements. Required columns are
 #' id (station id), length (the length class) and n (the number of fish measured) where
 #' the latter are the "raised" numbers.
 #' @param lwcoeff A vector of length 2, containing parameter
@@ -26,8 +26,8 @@
 #'
 #' @return A dataframe containing the follow columns ..
 
-catch_by_station <- function(Station,
-                             Length,
+catch_by_station <- function(Stations,
+                             Lengths,
                              lwcoeff = c(0.01, 3),
                              std = c("none", "towlength", "areaswept"),
                              std.towlength = 4,
@@ -42,7 +42,7 @@ catch_by_station <- function(Station,
   converter <- 1852   # meters per nautical mile
   
   if(std == "none") {
-    Station <- Station %>% dplyr::mutate(towlength = 1)  # makes nonsense but works further down
+    Stations <- Stations %>% dplyr::mutate(towlength = 1)  # makes nonsense but works further down
     std.towlength <- 1
     std.towwidth <- 1
     converter <- 1
@@ -60,19 +60,19 @@ catch_by_station <- function(Station,
   
   d <-
     #     NOTE: question were to specify length bins, here hardwired 5:140
-    dplyr::as_data_frame(expand.grid(length = c(5:140), id = Station$id)) %>%
-    dplyr::left_join(Station, by = "id")
+    dplyr::as_data_frame(expand.grid(length = c(5:140), id = Stations$id)) %>%
+    dplyr::left_join(Stations, by = "id")
   
   # Here should allow for length data.frame being missing
   #  But then also need numer because default is that stuff is raised
   #  Should may be have that as an option
-  if(missing(Length)) {
+  if(missing(Lengths)) {
     
   }
   
   d <-
     d %>%
-    dplyr::left_join(Length, by=c("id","length")) %>%
+    dplyr::left_join(Lengths, by=c("id","length")) %>%
     dplyr::arrange(id, length) %>%
     dplyr::group_by(id) %>%
     dplyr::mutate(n  = ifelse(is.na(n),0,n)  / towlength * multiplier,

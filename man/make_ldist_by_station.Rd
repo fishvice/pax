@@ -5,7 +5,7 @@
 \title{Make length distribution by station}
 \usage{
 make_ldist_by_station(stodvar, SPECIES, lengthclass, lengdir, numer,
-  std.towlength = 4, std.cv = 1, std.area = 4 * 17/1852)
+  std.towlength = 4, std.towwidth = 17, std.cv = 1)
 }
 \arguments{
 \item{stodvar}{XXX}
@@ -17,6 +17,12 @@ make_ldist_by_station(stodvar, SPECIES, lengthclass, lengdir, numer,
 \item{lengdir}{XXX}
 
 \item{numer}{XXX}
+
+\item{std.towlength}{XXX}
+
+\item{std.towwidth}{XXX}
+
+\item{std.cv}{XXX}
 }
 \description{
 Make length distribution by station

@@ -1,6 +1,8 @@
 #' @title Trim extreme towlengths
 #'
 #' @description Function that "trims" towlength to a certain minimum and/or maximum length
+#' 
+#' @export
 #'
 #' @param x A vector representing towlength
 #' @param std.towlength Standard towlength (default is 4)
