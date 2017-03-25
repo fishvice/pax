@@ -5,7 +5,8 @@
 \title{Calculate length based survey indices}
 \usage{
 calc_length_indices(Station, Stratas, SPECIES, lwcoeff, Sex, Length,
-  Subsampling, std.towlength = 4, std.towwidth = 17, std.cv = 1)
+  Subsampling, std.towlength = 4, std.towwidth = 17, std.cv = 1,
+  oracle = FALSE)
 }
 \arguments{
 \item{Station}{A dataframe with station information. Required columns are
@@ -40,6 +41,9 @@ recomended method.}
 
 \item{std.cv}{A multipler (default is 1) on the mean abundance/biomass if only one tow in
 a strata. In such cases the cv is set equivalent to the "mean" value.}
+
+\item{oracle}{A boolean, if FALSE (default) reads data from fjolst-package, if TRUE reads 
+data from Oracle database}
 }
 \value{
 Returns a \emph{list} with the following \emph{data.frame}s:

@@ -64,6 +64,8 @@
 #' @param std.towwidth Standardized tow width in meters (defalt 17)
 #' @param std.cv A multipler (default is 1) on the mean abundance/biomass if only one tow in
 #' a strata. In such cases the cv is set equivalent to the "mean" value.
+#' @param oracle A boolean, if FALSE (default) reads data from fjolst-package, if TRUE reads 
+#' data from Oracle database
 
 calc_length_indices <- function(Station,
                                 Stratas,
@@ -74,7 +76,8 @@ calc_length_indices <- function(Station,
                                 Subsampling,
                                 std.towlength = 4,
                                 std.towwidth = 17,
-                                std.cv = 1) {
+                                std.cv = 1,
+                                oracle = FALSE) {
   
   ## dummy, for passing test without lot of noise
   id <- n <- towlength <- b <- year <- strata <- N <- n_m <- cn <-
@@ -84,7 +87,7 @@ calc_length_indices <- function(Station,
   
   if(missing(Subsampling)) {
     Subsampling <-
-      fjolst::lesa.numer(Station$id, SPECIES, oracle = FALSE) %>% 
+      fjolst::lesa.numer(Station$id, SPECIES, oracle = oracle) %>% 
       dplyr::mutate(species = SPECIES) %>% 
       dplyr::select(id = synis.id, species,
                     n.counted = fj.talid,
@@ -100,7 +103,7 @@ calc_length_indices <- function(Station,
   
   if(missing(Length)) {
     Length <- 
-      fjolst::lesa.lengdir(Station$id, SPECIES, col.names="kyn", oracle = FALSE) %>% 
+      fjolst::lesa.lengdir(Station$id, SPECIES, col.names="kyn", oracle = oracle) %>% 
       dplyr::mutate(species = SPECIES) %>% 
       dplyr::select(id = synis.id, species, length = lengd,
                     n = fjoldi, sex = kyn)
