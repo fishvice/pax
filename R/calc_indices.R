@@ -79,7 +79,8 @@ calc_indices <- function(st,
                   n  = ifelse(is.na(n),0,n)  * std.towlength / towlength, # standardized to per 4 miles
                   cn = cumsum(n),
                   b  = n * lwcoeff[1] * length^lwcoeff[2]/1e3,
-                  cb = sum(b) - cumsum(b) + b) %>%
+                  cb = sum(b) - cumsum(b) + b,
+                  bc = cumsum(b)) %>%
     dplyr::ungroup() %>%
     dplyr::group_by(year, strata, length) %>%
     dplyr::summarise(N  = n(),
@@ -90,14 +91,18 @@ calc_indices <- function(st,
                      b_m  = mean(b),
                      b_d  = ifelse(N == 1, b_m  * std.cv, stats::sd(b)),
                      cb_m = mean(cb),
-                     cb_d = ifelse(N == 1, cb_m * std.cv, stats::sd(cb))) %>%
+                     cb_d = ifelse(N == 1, cb_m * std.cv, stats::sd(cb)),
+                     bc_m = mean(bc),
+                     bc_d = ifelse(N == 1, bc_m * std.cv, stats::sd(bc))
+                     ) %>%
     dplyr::ungroup() %>%
     dplyr::left_join(stratas %>% dplyr::select(strata, area = area), by = "strata") %>%
     dplyr::mutate(area  = area/1.852^2 / std.area,
                   n     = n_m  * area,
                   cn    = cn_m * area,
                   b     = b_m  * area,
-                  cb    = cb_m * area)
+                  cb    = cb_m * area,
+                  bc    = bc_m * area)
   
   aggr <-
     base %>%
@@ -110,7 +115,9 @@ calc_indices <- function(st,
                      cn = sum(cn),
                      cn.cv = calc_cv(cn_m, cn_d, area, N),
                      cb = sum(cb),
-                     cb.cv = calc_cv(cb_m, cb_d, area, N))
+                     cb.cv = calc_cv(cb_m, cb_d, area, N),
+                     bc = sum(bc),
+                     bc.cv = calc_cv(bc_m, bc_d, area, N))
   
   return(list(base = base, aggr = aggr))
   
