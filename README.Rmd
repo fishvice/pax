@@ -35,6 +35,7 @@ ___
 library(tidyverse)
 library(fjolst)    # for the time being
 library(pax)
+attach("/net/hafkaldi/export/u2/reikn/R/SurveyWork/SMB/Stations.rdata")
 ```
 
 ## Length based indices
@@ -46,10 +47,9 @@ OK, here you have to have some background knowledge. But we select "all" SMB sta
 
 ```{r}
 Station <- 
-  husky::STODVAR %>% 
-  bind_rows() %>% 
+  STODVAR.all %>% 
   filter(tognumer %in% 1:39) %>% 
-  select(id = synis.id, year = ar, towlength = toglengd, strata = newstrata) %>% 
+  select(id = synis.id, year = ar, towlength = toglengd, strata = oldstrata) %>% 
   mutate(towlength = pax:::trim_towlength(towlength),
          mult = 1) %>% 
   arrange(id)

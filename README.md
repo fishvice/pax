@@ -9,6 +9,7 @@ ___
 
 Have you wished for a painless way to generate survey indices. Give the following a try.
 
+
 ## Needed packages
 ___
 
@@ -28,6 +29,7 @@ ___
 library(tidyverse)
 library(fjolst)    # for the time being
 library(pax)
+attach("/net/hafkaldi/export/u2/reikn/R/SurveyWork/SMB/Stations.rdata")
 ```
 
 ## Length based indices
@@ -40,10 +42,9 @@ OK, here you have to have some background knowledge. But we select "all" SMB sta
 
 ```r
 Station <- 
-  husky::STODVAR %>% 
-  bind_rows() %>% 
+  STODVAR.all %>% 
   filter(tognumer %in% 1:39) %>% 
-  select(id = synis.id, year = ar, towlength = toglengd, strata = newstrata) %>% 
+  select(id = synis.id, year = ar, towlength = toglengd, strata = oldstrata) %>% 
   mutate(towlength = pax:::trim_towlength(towlength),
          mult = 1) %>% 
   arrange(id)
@@ -125,13 +126,14 @@ tidy_fixed %>%
 ```
 
 ```
-##       year            cb              cb2              diff       
-##  Min.   :1985   Min.   :161148   Min.   :160877   Min.   :0.1020  
-##  1st Qu.:1993   1st Qu.:242193   1st Qu.:241671   1st Qu.:0.1872  
-##  Median :2000   Median :289394   Median :288828   Median :0.2158  
-##  Mean   :2000   Mean   :327553   Mean   :326905   Mean   :0.1977  
-##  3rd Qu.:2008   3rd Qu.:388204   3rd Qu.:387380   3rd Qu.:0.2161  
-##  Max.   :2016   Max.   :627611   Max.   :626306   Max.   :0.2161
+##       year            cb              cb2              diff         
+##  Min.   :1985   Min.   :160666   Min.   :160877   Min.   :-2.68817  
+##  1st Qu.:1993   1st Qu.:243030   1st Qu.:241671   1st Qu.:-0.14274  
+##  Median :2001   Median :294071   Median :288828   Median : 0.16847  
+##  Mean   :2001   Mean   :337992   Mean   :326905   Mean   :-0.03683  
+##  3rd Qu.:2009   3rd Qu.:408901   3rd Qu.:387380   3rd Qu.: 0.31040  
+##  Max.   :2017   Max.   :697694   Max.   :626306   Max.   : 0.80048  
+##                                  NA's   :1        NA's   :1
 ```
 
 So the tidyverse is 0.2% higher than the mri - some may want to dig into that.
@@ -163,14 +165,15 @@ res$aggr %>%
 
 
 ```r
-spe88 <- calc_length_indices(Station, Stratas, 88, lwcoeff = c(0.01, 3))
+spe88 <-  calc_length_indices(Station, Stratas,  88, lwcoeff = c(0.01, 3))
 spe562 <- calc_length_indices(Station, Stratas, 562, lwcoeff = c(0.01, 3))
 spe150 <- calc_length_indices(Station, Stratas, 150, lwcoeff = c(0.01, 3))
-spe71 <- calc_length_indices(Station, Stratas, 71, lwcoeff = c(0.01, 3))
-spe88$aggr %>% mutate(Species = "Rauða sævesla") %>% 
+spe71 <-  calc_length_indices(Station, Stratas,  71, lwcoeff = c(0.01, 3))
+spe88$aggr %>% 
+  mutate(Species = "Rauða sævesla") %>% 
   bind_rows(spe562$aggr %>% mutate(Species = "Ljóskjafta")) %>% 
   bind_rows(spe150$aggr %>% mutate(Species = "Svartgóma")) %>% 
-  bind_rows(spe71$aggr %>% mutate(Species = "Ískóð")) %>% 
+  bind_rows(spe71$aggr %>%  mutate(Species = "Ískóð")) %>% 
   filter(length == 140) %>% 
   select(year, Species, cn, cn.cv) %>% 
   ggplot(aes(year, cn)) +
@@ -186,7 +189,7 @@ spe88$aggr %>% mutate(Species = "Rauða sævesla") %>%
 ```
 
 ```
-## Warning: Removed 58 rows containing missing values (geom_pointrange).
+## Warning: Removed 57 rows containing missing values (geom_pointrange).
 ```
 
 ![](README_files/figure-html/plot3-1.png)<!-- -->
@@ -279,15 +282,15 @@ x$aggr %>%
 ## 3  1987  3.66  28.32 104.66  83.00 21.38 12.75 12.95  2.80 0.99 0.42 0.44
 ## 4  1988  3.45   7.07  72.67 103.77 69.68  8.39  6.45  7.22 0.67 0.28 0.12
 ## 5  1989  4.05  16.43  22.10  80.04 74.32 39.26  4.85  1.70 1.41 0.27 0.19
-## 6  1990  5.57  11.82  26.16  14.20 28.04 35.24 16.77  1.75 0.58 0.48 0.13
+## 6  1990  5.57  11.82  26.16  14.20 28.04 35.24 16.77  1.75 0.58 0.47 0.12
 ## 7  1991  3.95  16.06  18.24  30.28 15.53 19.03 22.47  4.91 0.94 0.31 0.22
-## 8  1992  0.72  16.94  33.67  18.97 16.71  6.91  6.35  5.79 1.49 0.23 0.03
+## 8  1992  0.72  16.94  33.65  18.96 16.71  6.90  6.35  5.78 1.48 0.23 0.03
 ## 9  1993  3.57   4.78  30.97  36.84 13.55 10.64  2.43  2.04 1.40 0.41 0.13
 ## 10 1994 14.44  15.02   9.07  26.97 22.48  6.09  3.97  0.80 0.54 0.51 0.18
 ## 11 1995  1.08  29.37  24.85   9.08 24.57 18.48  4.03  1.92 0.38 0.19 0.24
 ## 12 1996  3.73   5.45  42.70  29.49 12.91 14.66 14.05  3.82 1.04 0.17 0.05
 ## 13 1997  1.18  22.23  13.53  56.28 29.22  9.54  8.81  6.71 0.58 0.27 0.15
-## 14 1998  8.08   5.37  30.04  16.13 62.23 28.92  6.65  5.27 3.05 0.68 0.19
+## 14 1998  8.08   5.34  30.06  16.16 62.24 28.92  6.65  5.27 3.05 0.68 0.16
 ## 15 1999  7.41  33.05   7.03  42.32 13.11 23.72 11.11  2.34 1.29 0.75 0.18
 ## 16 2000 18.92  27.67  55.12   6.92 30.08  8.41  8.20  4.14 0.49 0.28 0.09
 ## 17 2001 12.30  23.50  36.49  38.17  4.86 15.26  3.34  2.01 0.76 0.23 0.11
@@ -318,54 +321,55 @@ devtools::session_info()
 
 ```
 ##  setting  value                       
-##  version  R version 3.3.1 (2016-06-21)
+##  version  R version 3.3.2 (2016-10-31)
 ##  system   x86_64, linux-gnu           
 ##  ui       X11                         
 ##  language (EN)                        
 ##  collate  is_IS.UTF-8                 
 ##  tz       Atlantic/Reykjavik          
-##  date     2016-12-16                  
+##  date     2017-05-24                  
 ## 
-##  package    * version    date       source        
-##  assertthat   0.1        2013-12-06 CRAN (R 3.0.2)
-##  backports    1.0.4      2016-10-24 cran (@1.0.4) 
-##  colorspace   1.2-6      2015-03-11 CRAN (R 3.2.0)
-##  DBI          0.5-1      2016-09-10 cran (@0.5-1) 
-##  devtools     1.12.0     2016-12-05 CRAN (R 3.3.1)
-##  digest       0.6.10     2016-08-02 cran (@0.6.10)
-##  dplyr      * 0.5.0      2016-06-24 CRAN (R 3.3.1)
-##  evaluate     0.10       2016-10-11 cran (@0.10)  
-##  fjolst     * 1.0        2016-12-01 local         
-##  geo        * 1.4-3      2015-07-03 CRAN (R 3.3.1)
-##  ggplot2    * 2.2.0      2016-11-11 CRAN (R 3.3.1)
-##  gtable       0.2.0      2016-02-26 cran (@0.2.0) 
-##  htmltools    0.3.5      2016-03-21 CRAN (R 3.3.0)
-##  husky        0.0.3.9000 2016-12-14 local         
-##  knitr        1.15.1     2016-11-22 cran (@1.15.1)
-##  labeling     0.3        2014-08-23 CRAN (R 3.2.0)
-##  lazyeval     0.2.0      2016-06-12 cran (@0.2.0) 
-##  magrittr     1.5        2014-11-22 CRAN (R 3.1.2)
-##  mapdata    * 2.2-6      2016-01-14 cran (@2.2-6) 
-##  maps       * 3.1.1      2016-07-27 cran (@3.1.1) 
-##  memoise      1.0.0      2016-01-29 CRAN (R 3.3.0)
-##  munsell      0.4.3      2016-02-13 cran (@0.4.3) 
-##  ora          2.0-1      2014-04-10 CRAN (R 3.1.2)
-##  pax        * 0.0.1.9000 2016-12-16 local         
-##  plyr         1.8.4      2016-06-08 cran (@1.8.4) 
-##  purrr      * 0.2.2      2016-06-18 cran (@0.2.2) 
-##  R6           2.2.0      2016-10-05 cran (@2.2.0) 
-##  Rcpp         0.12.8     2016-11-17 cran (@0.12.8)
-##  readr      * 1.0.0      2016-08-03 CRAN (R 3.3.1)
-##  rmarkdown    1.2        2016-11-21 cran (@1.2)   
-##  ROracle      1.2-2      2016-02-17 CRAN (R 3.3.0)
-##  rprojroot    1.1        2016-10-29 cran (@1.1)   
-##  scales       0.4.1      2016-11-09 CRAN (R 3.3.1)
-##  stringi      1.1.1      2016-05-27 cran (@1.1.1) 
-##  stringr      1.1.0      2016-08-19 CRAN (R 3.3.0)
-##  tibble     * 1.2        2016-08-26 CRAN (R 3.3.1)
-##  tidyr      * 0.6.0      2016-08-12 cran (@0.6.0) 
-##  tidyverse  * 1.0.0      2016-09-09 CRAN (R 3.3.1)
-##  withr        1.0.2      2016-06-20 CRAN (R 3.3.0)
+##  package    * version    date       source                         
+##  assertthat   0.2.0      2017-04-11 cran (@0.2.0)                  
+##  backports    1.0.4      2016-10-24 cran (@1.0.4)                  
+##  colorspace   1.2-6      2015-03-11 CRAN (R 3.2.0)                 
+##  DBI          0.6        2017-03-09 cran (@0.6)                    
+##  devtools     1.12.0     2016-12-05 CRAN (R 3.3.1)                 
+##  digest       0.6.12     2017-01-27 CRAN (R 3.3.2)                 
+##  dplyr      * 0.5.0      2016-06-24 CRAN (R 3.3.1)                 
+##  evaluate     0.10       2016-10-11 cran (@0.10)                   
+##  fjolst     * 1.0        2017-05-14 local                          
+##  geo        * 1.4-3      2015-07-03 CRAN (R 3.3.1)                 
+##  ggplot2    * 2.2.1.9000 2017-04-12 Github (hadley/ggplot2@f4398b6)
+##  gtable       0.2.0      2016-02-26 cran (@0.2.0)                  
+##  htmltools    0.3.5      2016-03-21 CRAN (R 3.3.0)                 
+##  husky        0.0.3.9000 2017-05-24 Github (fishvice/husky@f0b9fb9)
+##  knitr        1.15.1     2016-11-22 cran (@1.15.1)                 
+##  labeling     0.3        2014-08-23 CRAN (R 3.2.0)                 
+##  lazyeval     0.2.0      2016-06-12 cran (@0.2.0)                  
+##  magrittr     1.5        2014-11-22 CRAN (R 3.1.2)                 
+##  mapdata    * 2.2-6      2016-01-14 cran (@2.2-6)                  
+##  maps       * 3.1.1      2016-07-27 cran (@3.1.1)                  
+##  memoise      1.0.0      2016-01-29 CRAN (R 3.3.0)                 
+##  munsell      0.4.3      2016-02-13 cran (@0.4.3)                  
+##  ora          2.0-1      2014-04-10 CRAN (R 3.1.2)                 
+##  pax        * 0.0.1.9000 2017-05-24 Github (fishvice/pax@5a9af82)  
+##  plyr         1.8.4      2016-06-08 cran (@1.8.4)                  
+##  purrr      * 0.2.2.2    2017-05-11 cran (@0.2.2.2)                
+##  R6           2.2.0      2016-10-05 cran (@2.2.0)                  
+##  Rcpp         0.12.11    2017-05-22 cran (@0.12.11)                
+##  readr      * 1.0.0      2016-08-03 CRAN (R 3.3.1)                 
+##  rlang        0.1.1      2017-05-18 cran (@0.1.1)                  
+##  rmarkdown    1.5        2017-04-26 CRAN (R 3.3.2)                 
+##  ROracle      1.2-2      2016-02-17 CRAN (R 3.3.0)                 
+##  rprojroot    1.1        2016-10-29 cran (@1.1)                    
+##  scales       0.4.1      2016-11-09 CRAN (R 3.3.1)                 
+##  stringi      1.1.5      2017-04-07 CRAN (R 3.3.2)                 
+##  stringr      1.2.0      2017-02-18 cran (@1.2.0)                  
+##  tibble     * 1.3.1      2017-05-17 CRAN (R 3.3.2)                 
+##  tidyr      * 0.6.3      2017-05-15 cran (@0.6.3)                  
+##  tidyverse  * 1.0.0      2016-09-09 CRAN (R 3.3.1)                 
+##  withr        1.0.2      2016-06-20 CRAN (R 3.3.0)                 
 ##  yaml         2.1.14     2016-11-12 cran (@2.1.14)
 ```
 
