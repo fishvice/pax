@@ -127,5 +127,10 @@ calc_length_indices <- function(Station,
   }
   
   # calculate
-  calc_indices(st = Station, lwcoeff = husky::LWCOEFF[[as.character(SPECIES)]], le = Length, stratas = Stratas)
+  if(missing(lwcoeff)) {
+    lwcoeff = husky::LWCOEFF[[as.character(SPECIES)]]
+    if(is.null(lwcoeff)) lwcoeff <- c(0.01, 3)
+  }
+  
+  calc_indices(st = Station, lwcoeff = lwcoeff, le = Length, stratas = Stratas)
 }

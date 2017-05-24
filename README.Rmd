@@ -63,11 +63,6 @@ Stratas <-
   select(strata, area = rall.area)
 ```
 
-
-```{r}
-
-```
-
 And then we leave the rest to the `smx:calc_length_indices`-function:
 
 #### Cod spring survey index
