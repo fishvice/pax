@@ -17,7 +17,6 @@ ___
 
 Have you wished for a painless way to generate survey indices. Give the following a try.
 
-Where am I?
 
 ## Needed packages
 ___
