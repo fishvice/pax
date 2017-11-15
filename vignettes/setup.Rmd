@@ -1,0 +1,36 @@
+---
+title: "Vignette Title"
+author: "Vignette Author"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r}
+library(tidyverse)
+```
+
+
+# Gear code
+
+```{r}
+library(ROracle)
+library(mar)
+con <- dbConnect(dbDriver("Oracle"))
+lesa_veidarfaeri(con) %>% 
+  collect(n = Inf) %>% 
+  rename(gid = veidarfaeri) %>% 
+  write_csv("data-raw/veidarfaeri.csv")
+# This was then edited by hand and then saved (inst/codes/gear.csv)
+```
+
