@@ -1,8 +1,17 @@
-calc_cv <- function(x, xd, area, N) {
-  Mean = sum(x * area)/sum(area)
-  Sum = sum(x * area)
-  tmpsum = sum(x[!is.na(xd)] * area[!is.na(xd)])
-  Calc.sdev = sqrt(sum(xd[!is.na(xd)]^2 * area[!is.na(xd)]^2/  N[!is.na(xd)])   / sum(area[!is.na(xd)])^2)
+#' Calculate overall cv from stratfied summary statistics
+#' 
+#' @param m Mean value within strata
+#' @param s Standard deviation within strata
+#' @param area The area (e.g. survey strata area)
+#' @param n number of samples within strata
+#'
+#' @export
+#'
+calc_cv <- function(m, s, area, n) {
+  Mean = sum(m * area)/sum(area)
+  Sum = sum(m * area)
+  tmpsum = sum(m[!is.na(s)] * area[!is.na(s)])
+  Calc.sdev = sqrt(sum(s[!is.na(s)]^2 * area[!is.na(s)]^2/  n[!is.na(s)])   / sum(area[!is.na(s)])^2)
   Sdev = Calc.sdev * Sum/tmpsum
   cv = Sdev/Mean
   

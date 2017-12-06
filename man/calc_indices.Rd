@@ -66,4 +66,3 @@ The function does in principle three things
 \item Aggregates the stratified indices to the total area.
 }
 }
-

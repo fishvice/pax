@@ -27,4 +27,3 @@ make_ldist_by_station(stodvar, SPECIES, lengthclass, lengdir, numer,
 \description{
 Make length distribution by station
 }
-

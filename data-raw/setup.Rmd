@@ -30,7 +30,7 @@ con <- dbConnect(dbDriver("Oracle"))
 lesa_veidarfaeri(con) %>% 
   collect(n = Inf) %>% 
   rename(gid = veidarfaeri) %>% 
-  write_csv("data-raw/veidarfaeri.csv")
+  write_csv("inst/codes/veidarfaeri.csv")
 # This was then edited by hand and then saved (inst/codes/gear.csv)
 ```
 

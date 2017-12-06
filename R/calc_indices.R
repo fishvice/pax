@@ -117,7 +117,8 @@ calc_indices <- function(st,
                      cb = sum(cb),
                      cb.cv = calc_cv(cb_m, cb_d, area, N),
                      bc = sum(bc),
-                     bc.cv = calc_cv(bc_m, bc_d, area, N))
+                     bc.cv = calc_cv(bc_m, bc_d, area, N)) %>% 
+    ungroup()
   
   return(list(base = base, aggr = aggr))
   

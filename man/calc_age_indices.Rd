@@ -23,4 +23,3 @@ calc_age_indices(st_length, st_ototliths, species, std.towlength = 4,
 \description{
 Title
 }
-

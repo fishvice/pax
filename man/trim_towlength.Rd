@@ -20,4 +20,3 @@ double the std.towlength}
 \description{
 Function that "trims" towlength to a certain minimum and/or maximum length
 }
-

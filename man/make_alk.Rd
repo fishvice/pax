@@ -20,4 +20,3 @@ make_alk(stodvar, SPECIES, lengthclass, vikmork, kvarnir)
 \description{
 Make age length key
 }
-

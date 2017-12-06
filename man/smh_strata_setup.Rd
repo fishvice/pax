@@ -9,4 +9,3 @@ smh_strata_setup()
 \description{
 Select smh stations and assign strata to stations
 }
-

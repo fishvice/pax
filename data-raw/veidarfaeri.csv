@@ -1,0 +1,106 @@
+gid,gear,fi_veidarfaeri,lysing,lods_veidarfaeri,lysing_enska
+46,Beam trawl,NA,"Bjálkatroll, 4 m",NA,"Beam trawl, 4 m."
+92,Gill net,22,Grálúðunet,GRLN,NA
+56,Purse seine,NA,Hringnót (einn bátur),NA,One boat operated purse seines
+57,Purse seine,NA,Hringnót (tveir bátar),NA,Two boats operated purse seines
+91,Gill net,91,Skötuselsnet,SNET,Monkfish net
+0,NA,0,Stundar ekki veiðar,NA,N/A
+2,Gill net,2,Net,NET,Gill net
+3,Hooks,3,Handfæri,HAND,Hand line
+4,Seine,4,Þorsknót,THOR,Cod seine
+6,Bottom trawl,6,Botnvarpa,BOTN,Bottom trawl
+7,Pelagic trawl,7,Flotvarpa,FLOT,Mid-water trawl
+8,Pelagic trawl,8,Spærlingsvarpa,SPAE,Norway pout trawl
+9,Bottom trawl,9,Humarvarpa,HUMA,Lobster Trawl
+10,Purse seine,10,Síldarnót,SILD,Herring seine
+11,Drift net,11,Reknet,REKN,Drift net
+13,Pelagic trawl,12,Loðnuflotvarpa,LOFL,Capelin mid-water trawl
+14,Bottom trawl,14,Rækjuvarpa,RAEK,Shrimp trawl
+15,Dredge,15,Hörpudiskplógur/Scallop dr.,HORP,Scallop dredge
+16,Long line,32,Grálúðulína,NA,Greeland halibut line
+18,Trap,18,Krabbagildra,KRAB,Crab trap
+19,Pelagic trawl,19,Gulllaxavarpa,NA,Atlantic argentine trawl
+20,NA,25,Ýmis veiðarfæri,YMIS,Various gear
+21,Pelagic trawl,13,Síldar-/kolmunnaflotvarpa,SIFL,Herring/Blue Whiting Mid-water Trawl
+22,Bottom trawl,22,Botnvarpa klædd,NA,Bottom trawl w/ chafer
+25,Gill net,20,Grásleppunet,GRSL,Lumpsucker net
+26,Danish seine,26,Dragnót 120 mm,NA,Danish seine 120 mm
+29,Gill net,29,Rauðmaganet,RMNT,Lumpsucker net
+31,Bottom trawl,31,Sandsílisvarpa,NA,Sandeel trawl
+32,Gill net,16,Lagnet,NA,Gillnet
+35,Danish seine,35,Dragnót 155 mm,NA,Danish seine 155 mm
+40,Dredge,40,Ígulkeraplógur,IGPL,Sea-urchins dredge
+41,Diver,41,Ígulkerakafari,IGKA,Diver
+73,Bottom trawl,73,Botnvarpa klædd (SMB),NA,Bottom trawl w chafer (SMB)
+74,Bottom trawl,74,Botnvarpa klædd (SMG),NA,Bottom trawl w chafer (SMG)
+90,Gill net,90,Ádráttarnet,NA,Gill net
+99,NA,99,Óskráð veiðarfæri,OSKR,Unregistered gear
+132,Camera,132,Myndavél / Camera,NA,Camera
+133,Grab,133,Petersen greip / Petersen grab,NA,Petersen grab
+134,Grab,134,Shipek greip / Shipek grab,NA,Shipek grab
+135,Box core,135,Kjarnataki / Smögen box corer,NA,Smögen box corer
+137,Dredge,137,Sneli sleði / detr. sledge (Sneli),NA,Sneli sledge
+138,Dredge,138,Skrapa / Triangle dredge,NA,Triangle dredge
+36,Long line,36,Lófótlína / Flotlína,NA,Lofoten line
+27,Danish seine,27,"Dragnót klædd, 40 mm",NA,Danish seine 40 mm w/chafer
+37,Dredge,37,Vatnsþrýstiplógur,VÞPL,Water jet dredge
+71,Long line,71,Landbeitt lína,LÍN*,Hand baited line
+38,Dredge,38,Kúffisksplógur,NA,Cyprine dredge
+75,Pelagic trawl,75,Tveggja báta troll,NA,Par trawl
+60,Bottom trawl,60,Botnvarpa 135 mm í poka,NA,"Bottom trawl, 135 mm"
+61,Bottom trawl,61,Fótreipisbotnvarpa,NA,Beam trawl
+76,Bottom trawl,76,Tvær botnvörpur,NA,Par bottom trawl
+77,Bottom trawl,77,Botnvarpa klædd (SMH),NA,Bottom trawl w chafer (SMH)
+24,Pelagic trawl,24,Flotvarpa klædd,NA,Mid-water trawl w/chafer
+28,Bottom trawl,28,Kassabotnvarpa,NA,Box trawl net
+30,Bottom trawl,30,Rækjuvarpa m/ leggpoka,NA,Shrimp trawl w/square mesh codend
+34,Pelagic trawl,34,Flotvarpa Gloria klædd,NA,Trawl - Gloria w/chafer
+68,Bottom trawl,68,"Botnvarpa klædd (B2-84), stærri hlerar",NA,Bottom trawl  w chafer and large otters
+130,Grab,130,Van Veen greip / Van Veen grab 35-40 kg,NA,Van Veen grab
+136,Dredge,136,RP sleði / RP sledge,NA,RP sledge
+139,Pelagic trawl,139,Agassiz troll / Agassiz trawl,NA,Agassiz trawl
+1,Long line,1,Lína,LINA,Line
+5,Danish seine,5,Dragnót 135 mm,DRAG,Danish seine
+12,Purse seine,21,Loðnunót,LODN,Capelin seine
+17,Trap,17,Þorskgildra,ÞGIL,Cod trap
+23,Pelagic trawl,23,Seiðaflotvarpa,NA,Fry mid-water trawl
+33,Pelagic trawl,33,Flotvarpa Gloria óklædd,NA,Trawl - Gloria 
+131,Grab,131,Van Veen greip / Van Veen grab 70-100 kg,NA,Van Veen grab
+62,Bottom trawl,NA,Botnvarpa með skilju,NA,Bottom trawl with sorting grid
+72,Gill net,NA,Net - SMN,NA,Net
+78,Bottom trawl,78,Botnvarpa klædd (SMH djúpslóð),NA,Deep sea bottom trawl w chafer
+63,Bottom trawl,NA,"Botnvarpa með skilju, 50mm rimlabil",NA,Bottom trawl with 50 mm sorting grid
+64,Bottom trawl,NA,"Botnvarpa með skilju, 52mm rimlabil",NA,Bottom trawl with 52 mm sorting grid
+65,Bottom trawl,NA,"Botnvarpa með skilju, 55mm rimlabil",NA,Bottom trawl with 55 mm sorting grid
+66,Bottom trawl,NA,Botnvarpa með skilju og yfirpoka,NA,Bottom trawl w sorting grid and chafer
+79,Bottom trawl,NA,Botnvarpa með leggglugga,NA,Bottom trawl w/square mesh window
+80,Danish seine,NA,Dragnót með leggglugga,NA,Danish seine w/square mesh window
+150,Sonda,NA,Sonda,NA,Sonda
+70,Bottom trawl,NA,Botnvarpa með leggpoka,NA,Bottom trawl w/square mesh codend
+142,NA,NA,Tucker lirfur háfur 4 fermetra op,NA,Extraction hood 4 m2
+144,NA,NA,WP-II   Átuháfur,NA,Krill extraction hood
+143,NA,NA,WP-80 Eggja háfur sem er 80 cm í þvermál,NA,Extraction hood 80 cm
+141,NA,NA,Tucker lirfur háfur 1 fermetra op,NA,Extraction hood 1m2
+59,Bottom trawl,NA,"Botnvarpa, 135 mm m. skilju, 60mm rimlab",NA,"Bottom trawl, 135mm, with 60 mm sorting"
+39,Trap,NA,Beitukóngsgildra,NA,Common whelk trap
+43,Fishing rod,43,Veiðistöng,NA,Fishing rod
+55,Danish seine,NA,Dragnót með leggpoka,NA,Danish seine w/square mesh codend
+44,Pelagic trawl,NA,Síldar-/kolmunnaflotvarpa með skilju,NA,Herring- and capelin mid-water trawl
+160,Dredge,NA,ROTV / Dragsleði með myndavél,NA,Dredge w camera
+161,Dredge,NA,ROV / Fjarstýrð grind með myndavélum,NA,Remote op dredge  w cameras
+162,Camera,NA,Litmyndir,NA,B/W photos
+163,Camera,NA,Svarthvítt,NA,Color photos
+164,NA,NA,Hljóðsjá / Scanning sonar,NA,Scanning sonar
+165,NA,NA,Hljóðnemi / Hydrophone,NA,Hydrophone
+166,NA,NA,GPS / GPS neðansjávarstaðsetning,NA,GPS
+167,NA,NA,Scanmar nemar,NA,Scanmar sensors
+168,NA,NA,Dýptarmælir / Dýptarmælir skips,NA,Ship sonar
+169,NA,NA,Höfuðlínusónar,NA,Sonar
+170,NA,NA,Skipsstraumsjá / Doppler um borð í skipi,NA,Doppler currents sensor
+171,NA,NA,DST mælar / Síritandi hita og dýpisnemar,NA,Temp and  depth sensors
+45,Fishing rod,45,Sjóstöng,SJOS,Ocean fishing rod
+172,Dredge,NA,Sandsílaplógur,NA,Sandeel dredge
+173,Dredge,NA,Sandsílaplógur (kúffisksplógur),NA,Sandeel dredge
+174,Grab,NA,KC greip / KC Day grab,NA,KC Day grab
+42,NA,NA,Kræklingalína,KRAL,Blue mussel on-growing line
+186,NA,NA,Ljósátuvarpa,NA,NA

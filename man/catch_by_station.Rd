@@ -37,4 +37,3 @@ Similar as \code{afli.per.stod} in the fjolst-package except returns
 abundance and biomass per length class, as well as abundance less than
 and biomass greater than a given length class.
 }
-
